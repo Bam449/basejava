@@ -1,0 +1,44 @@
+package ru.javawebinar.basejava.storage.serializer;
+
+import ru.javawebinar.basejava.model.Link;
+import ru.javawebinar.basejava.model.ListSection;
+import ru.javawebinar.basejava.model.Organization;
+import ru.javawebinar.basejava.model.OrganizationSection;
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.TextSection;
+import ru.javawebinar.basejava.util.XmlParser;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+
+public class XmlStreamSerializer implements StreamSerializer {
+
+    private XmlParser xmlParser;
+
+    public XmlStreamSerializer() {
+        xmlParser = new XmlParser(
+                Resume.class, Organization.class, Link.class, OrganizationSection.class, TextSection.class,
+                ListSection.class, Organization.Position.class);
+    }
+
+    @Override
+    public void doWrite(Resume r, OutputStream outputStream) throws IOException {
+
+        try (Writer w = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+            xmlParser.marshall(r, w);
+        }
+    }
+
+    @Override
+    public Resume doRead(InputStream inputStream) throws IOException {
+        try (Reader r = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+            return xmlParser.unmarshall(r);
+        }
+    }
+}
