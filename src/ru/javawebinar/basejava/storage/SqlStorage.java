@@ -58,7 +58,7 @@ public class SqlStorage implements Storage {
     }
 
     private void insertSection(Resume r, Connection connection) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO section(resume_uuid, type, content) VALUES (?, ?, ?)")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO section(resume_uuid, typesection, content) VALUES (?, ?, ?)")) {
             for (Map.Entry<SectionType, Section> entry : r.getSections().entrySet()) {
                 SectionType type = entry.getKey();
                 String stringSection = null;
@@ -133,8 +133,9 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        Resume resume = sqlHelper.executeSqlRequest("SELECT * FROM resume r " +
+        return sqlHelper.executeSqlRequest("SELECT * FROM resume r " +
                         "LEFT JOIN contact c on r.uuid = c.resume_uuid " +
+                        "LEFT JOIN section s on r.uuid = s.resume_uuid " +
                         "WHERE r.uuid =?",
 
                 ps -> {
@@ -145,30 +146,15 @@ public class SqlStorage implements Storage {
                     Resume r = new Resume(uuid, rs.getString("full_name"));
                     do {
                         addContact(rs, r);
+                        addSection(rs, r);
                     }
                     while (rs.next());
                     return r;
                 }, uuid);
-        sqlHelper.executeSqlRequest("SELECT * FROM resume r " +
-                        "LEFT JOIN section s on r.uuid = s.resume_uuid " +
-                        "WHERE r.uuid =?",
-                ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    if (!rs.next()) {
-                        throw new NotExistStorageException("Resume " + uuid + " is not exist");
-                    }
-
-                    do {
-                        addSection(rs, resume);
-                    }
-                    while (rs.next());
-                    return resume;
-                }, uuid);
-        return resume;
     }
 
     private void addSection(ResultSet rs, Resume r) throws SQLException {
-        String type = rs.getString("type");
+        String type = rs.getString("typeSection");
         if (type == null) {
             return;
         }
@@ -199,14 +185,30 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.executeSqlRequest("SELECT * FROM resume ORDER BY full_name", (ps) -> {
-            List<Resume> list = new ArrayList<>();
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(get(rs.getString("uuid")));
-            }
-            return list;
-        });
+      return   sqlHelper.executeSqlRequest("SELECT * FROM resume r " +
+                        "LEFT JOIN contact c on r.uuid = c.resume_uuid " +
+                        "LEFT JOIN section s on r.uuid = s.resume_uuid " +
+                        "ORDER BY full_name, uuid",
+
+                ps -> {
+                    List<Resume> list = new ArrayList<>();
+                    ResultSet rs = ps.executeQuery();
+                    if (!rs.next()) {
+                        throw new NotExistStorageException("Resume  is not exist");
+                    }
+                    Resume r = new Resume();
+                    do {
+                        String uuid = rs.getString("uuid");
+                        if (!r.getUuid().equals(uuid)) {
+                            r = new Resume(uuid, rs.getString("full_name"));
+                            list.add(r);
+                        }
+                        addContact(rs, r);
+                        addSection(rs, r);
+                    }
+                    while (rs.next());
+                    return list;
+                });
     }
 
     @Override
