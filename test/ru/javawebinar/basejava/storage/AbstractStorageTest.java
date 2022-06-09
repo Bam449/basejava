@@ -6,7 +6,11 @@ import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.ContactType;
+import ru.javawebinar.basejava.model.ListSection;
+import ru.javawebinar.basejava.model.OrganizationSection;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.SectionType;
+import ru.javawebinar.basejava.model.TextSection;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,11 +43,11 @@ public abstract class AbstractStorageTest {
 
         R1.addContact(ContactType.MAIL, "mail1@ya.ru");
         R1.addContact(ContactType.PHONE, "11111");
-/*        R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
         R1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivment11", "Achivment12", "Achivment13"));
         R1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
-        R1.addSection(SectionType.EXPERIENCE,
+      /*  R1.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Organization11", "http://Organization11.ru",
                                 new Organization.Position(2005, Month.JANUARY, "position1", "content1"),
@@ -56,7 +60,7 @@ public abstract class AbstractStorageTest {
                         new Organization("Organization12", "http://Organization12.ru")));*/
         R2.addContact(ContactType.SKYPE, "skype2");
         R2.addContact(ContactType.PHONE, "22222");
-       /* R1.addSection(SectionType.EXPERIENCE,
+        /*R1.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Organization2", "http://Organization2.ru",
                                 new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));*/
