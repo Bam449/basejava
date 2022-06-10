@@ -1,25 +1,24 @@
 package ru.javawebinar.basejava.web;
 
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class ResumeServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String name = req.getParameter("name");
+        resp.getWriter().write(name == null ? "Hello Resume" : "Hello " + name + " Resume");
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-//        response.setHeader("Content-Type", "text/html; charset=UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        String name = request.getParameter("name");
-        response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + '!');
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }
 
