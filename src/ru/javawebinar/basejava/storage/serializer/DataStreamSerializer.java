@@ -73,6 +73,7 @@ public class DataStreamSerializer implements StreamSerializer {
             });
             return resume;
         }
+
     }
 
     private <T> void writeItems(DataOutputStream dos, Collection<T> collection, DataStreamConsumer<T> dsc) throws IOException {

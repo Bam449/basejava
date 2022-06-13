@@ -19,6 +19,7 @@ public class JsonStreamSerializer implements StreamSerializer {
         try (Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
             JsonParser.write(r, writer);
         }
+
     }
 
     @Override
