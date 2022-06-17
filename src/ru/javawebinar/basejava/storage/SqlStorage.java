@@ -49,13 +49,13 @@ public class SqlStorage implements Storage {
             preparedStatement.setString(1, r.getUuid());
             preparedStatement.setString(2, r.getFullName());
             preparedStatement.execute();
-            insertType(r, connection, r.getContacts(),  ContactType.class, String.class);
+            insertType(r, connection, r.getContacts(), ContactType.class, String.class);
             insertType(r, connection, r.getSections(), SectionType.class, Section.class);
             return null;
         });
     }
 
-    private <K, V> void insertType(Resume r, Connection connection, Map<K, V> map,  Class <K> kClass, Class <V> vClass)  {
+    private <K, V> void insertType(Resume r, Connection connection, Map<K, V> map, Class<K> kClass, Class<V> vClass) {
         String type = vClass.getName().equals("java.lang.String") ? "contact(resume_uuid, type, value)" : "section(resume_uuid, type_section, content)";
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + type + " VALUES (?, ?, ?)")) {
             for (Map.Entry<K, V> entry : map.entrySet()) {
@@ -88,7 +88,7 @@ public class SqlStorage implements Storage {
     }
 
     private void deleteType(Resume r, Connection connection, boolean contactsOrSections) {
-       String type = contactsOrSections ? "contact" : "section";
+        String type = contactsOrSections ? "contact" : "section";
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + type + " WHERE resume_uuid =?")) {
             preparedStatement.setString(1, r.getUuid());
             preparedStatement.execute();
@@ -125,6 +125,7 @@ public class SqlStorage implements Storage {
             return null;
         }, uuid);
     }
+
     @Override
     public Resume get(String uuid) {
         return sqlHelper.executeSqlRequest("SELECT * FROM resume r " +
@@ -146,6 +147,7 @@ public class SqlStorage implements Storage {
                     return r;
                 }, uuid);
     }
+
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.executeSqlRequest("SELECT * FROM resume r " +

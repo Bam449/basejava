@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 public class JsonParser {
     private static Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(Section.class,  new JsonSectionAdapter())
+            .registerTypeAdapter(Section.class, new JsonSectionAdapter())
             .registerTypeAdapter(LocalDate.class, new JsonLocalDateParser())
             .create();
 
@@ -23,9 +23,10 @@ public class JsonParser {
         GSON.toJson(object, writer);
     }
 
-    public static <T> String write(T object, Class <T> clazz) {
-       return GSON.toJson(object, clazz);
+    public static <T> String write(T object, Class<T> clazz) {
+        return GSON.toJson(object, clazz);
     }
+
     public static <T> T read(String type, Class<T> clazz) {
         return GSON.fromJson(type, clazz);
     }

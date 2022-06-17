@@ -37,7 +37,7 @@ public class MainFile {
         s += "   ";
         System.out.println();
         System.out.println(s + "Directory: " + dir.getName());
-        File [] files = dir.listFiles();
+        File[] files = dir.listFiles();
         if (files == null) return;
         for (File file : files) {
             if (file.isDirectory()) {

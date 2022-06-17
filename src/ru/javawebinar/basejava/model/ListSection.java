@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class ListSection extends Section implements Serializable {
     private List<String> items;
+    public static final ListSection EMPTY = new ListSection("");
 
     public ListSection() {
     }
@@ -42,5 +43,10 @@ public class ListSection extends Section implements Serializable {
     @Override
     public int hashCode() {
         return items.hashCode();
+    }
+
+    @Override
+    public String toHtml() {
+        return String.join(", ", items);
     }
 }

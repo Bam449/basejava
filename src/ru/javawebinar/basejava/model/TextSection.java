@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class TextSection extends Section implements Serializable {
     private String content;
+    public static final TextSection EMPTY = new TextSection("");
 
     public TextSection() {
     }
@@ -36,5 +37,10 @@ public class TextSection extends Section implements Serializable {
     @Override
     public int hashCode() {
         return content.hashCode();
+    }
+
+    @Override
+    public String toHtml() {
+        return content;
     }
 }

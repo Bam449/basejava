@@ -47,7 +47,7 @@ public class XmlParser {
     }
 
     public static class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
-        public LocalDate unmarshal(String v){
+        public LocalDate unmarshal(String v) {
             return LocalDate.parse(v);
         }
 
