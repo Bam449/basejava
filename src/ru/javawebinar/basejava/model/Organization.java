@@ -1,10 +1,10 @@
 package ru.javawebinar.basejava.model;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import ru.javawebinar.basejava.util.XmlParser;
+import ru.javawebinar.basejava.util.LocalDateAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
@@ -12,17 +12,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 import static ru.javawebinar.basejava.util.DateUtil.of;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
-    private Link homePage;
-    private List<Position> positions = new ArrayList<>();
+    private static final long serialVersionUID = 1L;
 
     public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
+
+    private Link homePage;
+    private List<Position> positions = new ArrayList<>();
 
     public Organization() {
     }
@@ -63,20 +64,17 @@ public class Organization implements Serializable {
         return "Organization(" + homePage + "," + positions + ')';
     }
 
-
-    public String toHtml() {
-        return "Организация: " + homePage.toHtml() + positions.stream().map(Position::toHtml).collect(Collectors.joining()) + "<br>";
-    }
-
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        @XmlJavaTypeAdapter(XmlParser.LocalDateAdapter.class)
-        public LocalDate startDate;
-        @XmlJavaTypeAdapter(XmlParser.LocalDateAdapter.class)
-        public LocalDate endDate;
+        public static final Position EMPTY = new Position();
+
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate startDate;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate endDate;
         private String title;
         private String description;
-        public static final Position EMPTY = new Position();
+
         public Position() {
         }
 
@@ -95,7 +93,7 @@ public class Organization implements Serializable {
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;
-            this.description = description;
+            this.description = description == null ? "" : description;
         }
 
         public LocalDate getStartDate() {
@@ -133,14 +131,6 @@ public class Organization implements Serializable {
         @Override
         public String toString() {
             return "Position(" + startDate + ',' + endDate + ',' + title + ',' + description + ')';
-        }
-
-        public String toHtml() {
-
-            return "Период: <time>" + startDate +  "</time>, "
-                    + "<time>" + endDate +  "</time> <br> "
-                    + title + ", "
-                    + description + "<br>";
         }
     }
 }

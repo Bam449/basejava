@@ -6,9 +6,8 @@ import ru.javawebinar.basejava.exception.StorageException;
 
 import java.sql.SQLException;
 
-public class SqlExceptionUtil {
-
-    private SqlExceptionUtil() {
+public class ExceptionUtil {
+    private ExceptionUtil() {
     }
 
     public static StorageException convertException(SQLException e) {

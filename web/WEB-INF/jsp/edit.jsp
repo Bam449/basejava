@@ -1,11 +1,10 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
-<%@ page import="ru.javawebinar.basejava.model.SectionType" %>
-<%@ page import="ru.javawebinar.basejava.model.OrganizationSection" %>
 <%@ page import="ru.javawebinar.basejava.model.ListSection" %>
+<%@ page import="ru.javawebinar.basejava.model.OrganizationSection" %>
+<%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -91,8 +90,8 @@
       </c:choose>
     </c:forEach>
     <button type="submit">Сохранить</button>
-    <button onclick="window.history.back()">Отменить</button>
   </form>
+    <button onclick="window.history.back()">Отменить</button>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

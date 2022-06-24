@@ -1,9 +1,8 @@
 package ru.javawebinar.basejava.model;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlRootElement;
-
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
@@ -13,9 +12,7 @@ import java.util.UUID;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Comparable<Resume>, Serializable {
-
-    private String uuid;
-    private String fullName;
+    private static final long serialVersionUID = 1L;
 
     public static final Resume EMPTY = new Resume();
 
@@ -28,24 +25,26 @@ public class Resume implements Comparable<Resume>, Serializable {
         EMPTY.setSection(SectionType.EDUCATION, new OrganizationSection(Organization.EMPTY));
     }
 
+    // Unique identifier
+    private String uuid;
+
+    private String fullName;
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
-    public Resume(String uuid, String fullName) {
-        Objects.requireNonNull(fullName, "FullName must not be null");
-        Objects.requireNonNull(uuid, "FullName must not be null");
-        this.uuid = uuid;
-        this.fullName = fullName;
+    public Resume() {
     }
 
     public Resume(String fullName) {
-        this.uuid = UUID.randomUUID().toString();
-        this.fullName = fullName;
+        this(UUID.randomUUID().toString(), fullName);
     }
 
-    public Resume() {
-        this(UUID.randomUUID().toString());
+    public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
+        this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public String getUuid() {
@@ -54,6 +53,10 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Map<ContactType, String> getContacts() {
@@ -72,11 +75,11 @@ public class Resume implements Comparable<Resume>, Serializable {
         return sections.get(type);
     }
 
-    public void addContact(ContactType type, String value) {
+    public void setContact(ContactType type, String value) {
         contacts.put(type, value);
     }
 
-    public void addSection(SectionType type, Section section) {
+    public void setSection(SectionType type, Section section) {
         sections.put(type, section);
     }
 
@@ -85,7 +88,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName) && Objects.equals(contacts, resume.contacts) && Objects.equals(sections, resume.sections);
+        return Objects.equals(uuid, resume.uuid) &&
+                Objects.equals(fullName, resume.fullName) &&
+                Objects.equals(contacts, resume.contacts) &&
+                Objects.equals(sections, resume.sections);
     }
 
     @Override
@@ -94,42 +100,13 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     @Override
-    public int compareTo(Resume o) {
-        if (fullName.equals(o.fullName)) {
-            return uuid.compareTo(o.uuid);
-        }
-        return fullName.compareTo(o.fullName);
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String toHtml() {
-        StringBuilder result = new StringBuilder();
-        for (Map.Entry <ContactType, String> type: getContacts().entrySet()){
-            result.append(type.getKey().toHtml(type.getValue())).append("<br>");
-        }
-        result.append("<br>");
-        for (Map.Entry <SectionType, Section> entry: getSections().entrySet()){
-            result.append(entry.getKey().toHtml(entry.getValue()));
-        }
-        return result.toString();
+    public String toString() {
+        return uuid + '(' + fullName + ')';
     }
 
     @Override
-    public String toString() {
-        return "Resume{" +
-                "uuid='" + uuid + '\'' +
-                ", fullName='" + fullName + '\'' +
-                '}';
-    }
-
-    public void setSection(SectionType type, Section section) {
-        sections.put(type, section);
-    }
-
-    public void setContact(ContactType type, String value) {
-        contacts.put(type, value);
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }

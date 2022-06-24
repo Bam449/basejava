@@ -1,28 +1,22 @@
 package ru.javawebinar.basejava.model;
 
 public enum SectionType {
-    PERSONAL("Личные качества"),
     OBJECTIVE("Позиция"),
+    PERSONAL("Личные качества"),
     ACHIEVEMENT("Достижения"),
     QUALIFICATIONS("Квалификация"),
     EXPERIENCE("Опыт работы"),
     EDUCATION("Образование");
 
-    private final String title;
+    private String title;
 
     SectionType(String title) {
         this.title = title;
     }
 
-
-    public String toHtml(Section section) {
-        return title + ": <details>" + section.toHtml() + "</details><br>";
-    }
-
     public String getTitle() {
         return title;
     }
-
 }
 
 

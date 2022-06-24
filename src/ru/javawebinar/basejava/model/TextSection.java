@@ -1,11 +1,14 @@
 package ru.javawebinar.basejava.model;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class TextSection extends Section implements Serializable {
-    private String content;
+public class TextSection extends Section {
+
+    private static final long serialVersionUID = 1L;
+
     public static final TextSection EMPTY = new TextSection("");
+
+    private String content;
 
     public TextSection() {
     }
@@ -32,15 +35,11 @@ public class TextSection extends Section implements Serializable {
         TextSection that = (TextSection) o;
 
         return content.equals(that.content);
+
     }
 
     @Override
     public int hashCode() {
         return content.hashCode();
-    }
-
-    @Override
-    public String toHtml() {
-        return content;
     }
 }

@@ -1,29 +1,20 @@
 package ru.javawebinar.basejava.web;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Link;
-import ru.javawebinar.basejava.model.ListSection;
-import ru.javawebinar.basejava.model.Organization;
-import ru.javawebinar.basejava.model.OrganizationSection;
-import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.Section;
-import ru.javawebinar.basejava.model.SectionType;
-import ru.javawebinar.basejava.model.TextSection;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
 import ru.javawebinar.basejava.util.DateUtil;
 import ru.javawebinar.basejava.util.HtmlUtil;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-//@WebServlet("/resume")
 public class ResumeServlet extends HttpServlet {
 
     private Storage storage;
@@ -31,13 +22,17 @@ public class ResumeServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        storage = Config.getINSTANCE().getStorage();
+        storage = Config.get().getStorage();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
+        if (fullName == null || fullName.isEmpty()) {
+            response.sendRedirect("resume");
+            return;
+        }
 
         final boolean isCreate = (uuid == null || uuid.length() == 0);
         Resume r;
@@ -63,9 +58,16 @@ public class ResumeServlet extends HttpServlet {
                 r.getSections().remove(type);
             } else {
                 switch (type) {
-                    case OBJECTIVE, PERSONAL -> r.setSection(type, new TextSection(value));
-                    case ACHIEVEMENT, QUALIFICATIONS -> r.setSection(type, new ListSection(value.split("\\n")));
-                    case EDUCATION, EXPERIENCE -> {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        r.setSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        r.setSection(type, new ListSection(value.split("\\n")));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
                         List<Organization> orgs = new ArrayList<>();
                         String[] urls = request.getParameterValues(type.name() + "url");
                         for (int i = 0; i < values.length; i++) {
@@ -86,7 +88,7 @@ public class ResumeServlet extends HttpServlet {
                             }
                         }
                         r.setSection(type, new OrganizationSection(orgs));
-                    }
+                        break;
                 }
             }
         }
@@ -98,7 +100,7 @@ public class ResumeServlet extends HttpServlet {
         response.sendRedirect("resume");
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
         if (action == null) {
@@ -108,17 +110,17 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume r;
         switch (action) {
-            case "delete" -> {
+            case "delete":
                 storage.delete(uuid);
                 response.sendRedirect("resume");
                 return;
-            }
-            case "view" -> r = storage.get(uuid);
-            case "add" -> {
+            case "view":
+                r = storage.get(uuid);
+                break;
+            case "add":
                 r = Resume.EMPTY;
-                storage.save(r);
-            }
-            case "edit" -> {
+                break;
+            case "edit":
                 r = storage.get(uuid);
                 for (SectionType type : SectionType.values()) {
                     Section section = r.getSection(type);
@@ -153,8 +155,9 @@ public class ResumeServlet extends HttpServlet {
                     }
                     r.setSection(type, section);
                 }
-            }
-            default -> throw new IllegalArgumentException("Action " + action + " is illegal");
+                break;
+            default:
+                throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", r);
         request.getRequestDispatcher(
