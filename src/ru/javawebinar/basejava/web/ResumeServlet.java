@@ -1,7 +1,15 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.model.ContactType;
+import ru.javawebinar.basejava.model.Link;
+import ru.javawebinar.basejava.model.ListSection;
+import ru.javawebinar.basejava.model.Organization;
+import ru.javawebinar.basejava.model.OrganizationSection;
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.Section;
+import ru.javawebinar.basejava.model.SectionType;
+import ru.javawebinar.basejava.model.TextSection;
 import ru.javawebinar.basejava.storage.Storage;
 import ru.javawebinar.basejava.util.DateUtil;
 import ru.javawebinar.basejava.util.HtmlUtil;
@@ -13,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
@@ -30,7 +39,8 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         if (fullName == null || fullName.isEmpty()) {
-            response.sendRedirect("resume");
+            response.getWriter().write("Name must not be null");
+           // response.sendRedirect("/resume");
             return;
         }
 
@@ -64,7 +74,10 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.setSection(type, new ListSection(value.split("\\n")));
+                        String [] tempArray = Arrays.stream(value.split("\\n"))
+                                .filter(s -> !HtmlUtil.isEmpty(s))
+                                .toArray(String[]::new);
+                        r.setSection(type, new ListSection(tempArray));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:

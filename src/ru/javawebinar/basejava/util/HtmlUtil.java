@@ -4,7 +4,7 @@ import ru.javawebinar.basejava.model.Organization;
 
 public class HtmlUtil {
     public static boolean isEmpty(String str) {
-        return str == null || str.trim().length() == 0 || str.isEmpty();
+        return str == null || str.trim().isEmpty();
     }
 
     public static String formatDates(Organization.Position position) {
