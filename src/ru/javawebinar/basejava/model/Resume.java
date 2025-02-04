@@ -1,15 +1,18 @@
 package ru.javawebinar.basejava.model;
 
-/**
- * Initial resume class
- */
+import java.util.UUID;
+
+
 public class Resume {
 
-    // Unique identifier
-   private String uuid;
+    private String uuid;
 
     public Resume(String uuid) {
         this.uuid = uuid;
+    }
+
+    public Resume() {
+        this(UUID.randomUUID().toString());
     }
 
     @Override
