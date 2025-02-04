@@ -1,41 +1,32 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exeption.ExistStorageException;
-import ru.javawebinar.basejava.exeption.NotExistStorageException;
 import ru.javawebinar.basejava.exeption.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage{
+public abstract class AbstractArrayStorage extends AbstractStorage{
     private static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
-    public void save(Resume r) {
+    @Override
+    protected void doSave(Resume r, Object searchKey) {
         if (STORAGE_LIMIT == size) throw new StorageException("Stack Over Flaw", r.getUuid());
-        int index = getIndex(r.getUuid());
-        if (index > 0) throw new ExistStorageException(r.getUuid());
-        insertElement(r, index);
+        insertElement(r, (int)searchKey);
         size++;
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) throw new NotExistStorageException(uuid);
-        return storage[index];
+    public Resume doGet(Object searchKey) {
+        return storage[(int)searchKey];
     }
 
-    public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) throw new NotExistStorageException(r.getUuid());
-        storage[index] = r;
+    public void doUpdate(Resume r, Object searchKey) {
+        storage[(int)searchKey] = r;
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) throw new NotExistStorageException(uuid);
-        fillDeleteElement(index);
+    public void doDelete(Object searchKey) {
+        fillDeleteElement((int) searchKey);
         storage[size - 1] = null;
         size--;
     }
@@ -45,7 +36,7 @@ public abstract class AbstractArrayStorage implements Storage{
         size = 0;
     }
 
-    public Resume[] getAll() {
+    public Resume[] doCopyAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
@@ -53,8 +44,10 @@ public abstract class AbstractArrayStorage implements Storage{
         return size;
     }
 
-
-    protected abstract int getIndex(String uuid);
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >=0;
+    }
 
     protected abstract void insertElement(Resume r, int index);
 
