@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Initial resume class
  */
@@ -5,6 +7,10 @@ public class Resume {
 
     // Unique identifier
    private String uuid;
+
+    public Resume(String uuid) {
+        this.uuid = uuid;
+    }
 
     @Override
     public String toString() {

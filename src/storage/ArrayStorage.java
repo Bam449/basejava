@@ -1,15 +1,18 @@
+package storage;
+
+import model.Resume;
+
 import java.util.Arrays;
 
-/**
- * Array based storage for Resumes
- */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+
+    public static final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
 
     public void save(Resume r) {
         int key = getKey(r.getUuid());
-        if (key > 0) return;
+        if (key > 0 || STORAGE_LIMIT == size) return;
         storage[size] = r;
         size++;
     }
@@ -18,6 +21,12 @@ public class ArrayStorage {
         int key = getKey(uuid);
         if (key < 0) return null;
         return storage[key];
+    }
+
+    public void update(Resume r) {
+        int key = getKey(r.getUuid());
+        if (key < 0) return;
+        storage[key] = r;
     }
 
     public void delete(String uuid) {
@@ -37,7 +46,7 @@ public class ArrayStorage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
