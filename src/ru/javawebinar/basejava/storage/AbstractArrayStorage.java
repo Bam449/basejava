@@ -7,28 +7,28 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
     private static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
     @Override
-    protected void doSave(Resume r, Object searchKey) {
+    protected void doSave(Resume r, Integer searchKey) {
         if (STORAGE_LIMIT == size) throw new StorageException("Stack Over Flaw", r.getUuid());
-        insertElement(r, (int) searchKey);
+        insertElement(r, searchKey);
         size++;
     }
 
-    public Resume doGet(Object searchKey) {
-        return storage[(int) searchKey];
+    public Resume doGet(Integer searchKey) {
+        return storage[searchKey];
     }
 
-    public void doUpdate(Resume r, Object searchKey) {
-        storage[(int) searchKey] = r;
+    public void doUpdate(Resume r, Integer searchKey) {
+        storage[searchKey] = r;
     }
 
-    public void doDelete(Object searchKey) {
-        fillDeleteElement((int) searchKey);
+    public void doDelete(Integer searchKey) {
+        fillDeleteElement(searchKey);
         storage[size - 1] = null;
         size--;
     }
@@ -48,8 +48,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     protected abstract void insertElement(Resume r, int index);
