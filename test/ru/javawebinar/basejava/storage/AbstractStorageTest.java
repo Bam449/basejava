@@ -8,24 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static ru.javawebinar.basejava.storage.ResumeTestData.R1;
+import static ru.javawebinar.basejava.storage.ResumeTestData.R2;
+import static ru.javawebinar.basejava.storage.ResumeTestData.R3;
+import static ru.javawebinar.basejava.storage.ResumeTestData.R4;
 
 public abstract class AbstractStorageTest {
 
     protected final Storage storage;
-    private final String uuid1 = "uuid1";
-    private final String uuid2 = "uuid2";
-    private final String uuid3 = "uuid3";
-    private final String uuid4 = "uuid4";
-
-    private final String fullName1 = "fullName1";
-    private final String fullName2 = "fullName2";
-    private final String fullName3 = "fullName3";
-    private final String fullName4 = "fullName4";
-
-    private final Resume R1 = new Resume(uuid1, fullName1);
-    private final Resume R2 = new Resume(uuid2, fullName2);
-    private final Resume R3 = new Resume(uuid3, fullName3);
-    private final Resume R4 = new Resume(uuid4, fullName4);
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -52,7 +42,7 @@ public abstract class AbstractStorageTest {
 
     @org.junit.Test
     public void get() {
-        assertEquals(R1, storage.get("uuid1"));
+        assertEquals(R1, storage.get(R1.getUuid()));
     }
 
     @org.junit.Test(expected = NotExistStorageException.class)
@@ -62,9 +52,9 @@ public abstract class AbstractStorageTest {
 
     @org.junit.Test
     public void update() {
-        Resume testResume = new Resume(uuid3, "R4");
+        Resume testResume = new Resume(R3.getUuid(), "R4");
         storage.update(testResume);
-        assertEquals(testResume, storage.get("uuid3"));
+        assertEquals(testResume, storage.get(R3.getUuid()));
         assertSize(3);
     }
 
@@ -75,13 +65,13 @@ public abstract class AbstractStorageTest {
 
     @org.junit.Test
     public void delete() {
-        storage.delete("uuid3");
+        storage.delete(R3.getUuid());
         assertSize(2);
     }
 
     @org.junit.Test(expected = NotExistStorageException.class)
     public void deleteNotExist() {
-        storage.delete("R4");
+        storage.delete(R4.getUuid());
     }
 
     @org.junit.Test
