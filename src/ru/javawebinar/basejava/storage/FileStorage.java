@@ -4,6 +4,8 @@ import ru.javawebinar.basejava.exeption.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.serializer.StreamSerializer;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,18 +15,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public abstract class FileStorage extends AbstractStorage<File> {
 
-    private final StreamSerializer serializer;
     private final File storage;
+    private final StreamSerializer serializer;
 
-    protected AbstractFileStorage(File storage, StreamSerializer serializer){
+    protected FileStorage(File storage, StreamSerializer serializer) {
         Objects.requireNonNull(storage, "Directory must not be null");
         this.serializer = serializer;
         if (!storage.isDirectory()) throw new IllegalArgumentException(storage.getAbsolutePath() + " is not directory");
-        if (!storage.canRead() || !storage.canWrite()) {
+        if (!storage.canRead() || !storage.canWrite())
             throw new IllegalArgumentException(storage.getAbsolutePath() + " is not readable/writable");
-        }
         this.storage = storage;
     }
 
@@ -41,7 +42,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doSave(Resume r, File searchKey) {
         try {
-            serializer.doWrite(r, new FileOutputStream(searchKey));
+            serializer.doWrite(r, new BufferedOutputStream(new FileOutputStream(searchKey)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +51,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File searchKey) {
         try {
-            return serializer.doRead(new FileInputStream(searchKey));
+            return serializer.doRead(new BufferedInputStream(new FileInputStream(searchKey)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,7 +59,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doUpdate(Resume r, File searchKey) {
-        doDelete(searchKey);
         doSave(r, searchKey);
     }
 
