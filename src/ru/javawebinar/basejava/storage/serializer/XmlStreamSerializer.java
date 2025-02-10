@@ -8,7 +8,7 @@ import java.io.OutputStream;
 public class XmlStreamSerializer implements StreamSerializer{
     @Override
     public void doWrite(Resume r, OutputStream outputStream){
-
+        System.out.println("sss");
     }
 
     @Override
