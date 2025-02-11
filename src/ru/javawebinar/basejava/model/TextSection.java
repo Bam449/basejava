@@ -5,7 +5,10 @@ import java.util.Objects;
 
 public class TextSection extends Section {
 
-    private final String content;
+    private String content;
+
+    public TextSection() {
+    }
 
     public TextSection(String content) {
         Objects.requireNonNull(content, "content must not be null");
@@ -23,17 +26,13 @@ public class TextSection extends Section {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         TextSection that = (TextSection) o;
-
-        return content.equals(that.content);
-
+        return Objects.equals(content, that.content);
     }
 
     @Override
     public int hashCode() {
-        return content.hashCode();
+        return Objects.hashCode(content);
     }
 }

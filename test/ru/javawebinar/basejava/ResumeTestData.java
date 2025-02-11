@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava.storage;
+package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.ListSection;
@@ -43,10 +43,11 @@ public class ResumeTestData {
                         new Organization("Organization11", "http://Organization11.ru",
                                 new Organization.Position(2005, Month.JANUARY, "position1", "content1"),
                                 new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "position2", "content2"))));
-        R1.setSection(SectionType.EXPERIENCE,
+         R1.setSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Organization2", "http://Organization2.ru",
                                 new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
+
         R1.setSection(SectionType.EDUCATION,
                 new OrganizationSection(
                         new Organization("Institute", null,

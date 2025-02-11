@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static ru.javawebinar.basejava.storage.ResumeTestData.R1;
-import static ru.javawebinar.basejava.storage.ResumeTestData.R2;
-import static ru.javawebinar.basejava.storage.ResumeTestData.R3;
-import static ru.javawebinar.basejava.storage.ResumeTestData.R4;
+import static ru.javawebinar.basejava.ResumeTestData.R1;
+import static ru.javawebinar.basejava.ResumeTestData.R2;
+import static ru.javawebinar.basejava.ResumeTestData.R3;
+import static ru.javawebinar.basejava.ResumeTestData.R4;
 
 public abstract class AbstractStorageTest {
 

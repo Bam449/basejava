@@ -6,7 +6,10 @@ import java.util.Objects;
 
 public class ListSection extends Section{
 
-    private final List<String> items;
+    private List<String> items;
+
+    public ListSection() {
+    }
 
     public ListSection(List<String> items) {
         Objects.requireNonNull(items, "Items must not be null");
@@ -24,13 +27,12 @@ public class ListSection extends Section{
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-
         ListSection that = (ListSection) o;
-        return items.equals(that.items);
+        return Objects.equals(items, that.items);
     }
 
     @Override
     public int hashCode() {
-        return items.hashCode();
+        return Objects.hashCode(items);
     }
 }
