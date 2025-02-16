@@ -8,8 +8,8 @@ import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Link implements Serializable {
-    private String name;
-    private String url;
+    private String name = "name";
+    private String url = "url";
 
     public Link() {
     }
