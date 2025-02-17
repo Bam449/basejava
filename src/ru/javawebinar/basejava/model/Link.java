@@ -8,8 +8,8 @@ import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Link implements Serializable {
-    private String name = "name";
-    private String url = "url";
+    private String name;
+    private String url;
 
     public Link() {
     }
@@ -17,6 +17,7 @@ public class Link implements Serializable {
     public Link(String name, String url) {
         Objects.requireNonNull(name, "Name must not be null");
         this.name = name;
+        if (url == null) url = "";
         this.url = url;
     }
 

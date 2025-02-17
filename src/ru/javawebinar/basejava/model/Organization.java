@@ -72,7 +72,7 @@ public class Organization implements Serializable {
         @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
         private LocalDate endDate;
         private String title;
-        private String description = "111";
+        private String description;
 
         public Position() {
         }
@@ -84,6 +84,7 @@ public class Organization implements Serializable {
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;
+            if (description == null) description = "";
             this.description = description;
         }
 
