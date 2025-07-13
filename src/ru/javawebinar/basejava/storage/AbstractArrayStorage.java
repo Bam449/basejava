@@ -1,9 +1,13 @@
+package ru.javawebinar.basejava.storage;
+
+import ru.javawebinar.basejava.model.Resume;
+
 import java.util.Arrays;
 
-public class ArrayStorage {
-    public static final int STORAGE_SIZE = 10000;
-    private final Resume[] storage = new Resume[STORAGE_SIZE];
-    private int size;
+public abstract class AbstractArrayStorage {
+    private static final int STORAGE_SIZE = 10000;
+    protected final Resume[] storage = new Resume[STORAGE_SIZE];
+    protected int size;
 
     public void save(Resume r) {
         if (size == STORAGE_SIZE) {
@@ -15,7 +19,7 @@ public class ArrayStorage {
             System.out.println("Error");
             return;
         }
-        storage[size] = r;
+        insertIndex(searchKey, r);
         size++;
     }
 
@@ -43,8 +47,7 @@ public class ArrayStorage {
             System.out.println("Error");
             return;
         }
-        storage[searchKey] = storage[size - 1];
-        storage[size - 1] = null;
+        deleteIndex(searchKey);
         size--;
     }
 
@@ -61,12 +64,7 @@ public class ArrayStorage {
         return size;
     }
 
-    private int getSearchKey(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
-    }
+    protected abstract int getSearchKey(String uuid);
+    protected abstract void insertIndex(int key, Resume resume);
+    protected abstract void deleteIndex(int index);
 }
