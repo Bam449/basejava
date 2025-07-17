@@ -9,6 +9,20 @@ import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
+    protected abstract boolean isExist(Object searchKey);
+
+    protected abstract Object getSearchKey(String uuid);
+
+    protected abstract void insertElement(Object index, Resume resume);
+
+    protected abstract void deleteElement(Object index);
+
+    protected abstract Resume getElement(Object searchKey);
+
+    protected abstract void updateElement(Object searchKey, Resume resume);
+
+    protected abstract List<Resume> getList();
+
     public void save(Resume r) {
         Object searchKey = getNotExistedSearchKey(r.getUuid());
         insertElement(searchKey, r);
@@ -51,18 +65,4 @@ public abstract class AbstractStorage implements Storage {
         Collections.sort(result);
         return result;
     }
-
-    protected abstract boolean isExist(Object searchKey);
-
-    protected abstract Object getSearchKey(String uuid);
-
-    protected abstract void insertElement(Object index, Resume resume);
-
-    protected abstract void deleteElement(Object index);
-
-    protected abstract Resume getElement(Object searchKey);
-
-    protected abstract void updateElement(Object searchKey, Resume resume);
-
-    protected abstract List<Resume> getList();
 }
