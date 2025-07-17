@@ -1,51 +1,37 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage{
+public abstract class AbstractArrayStorage extends AbstractStorage{
     private static final int STORAGE_SIZE = 10000;
     protected final Resume[] storage = new Resume[STORAGE_SIZE];
     protected int size;
 
-    public void save(Resume r) {
+    @Override
+    public void insertElement(Object index, Resume r) {
         if (size == STORAGE_SIZE) {
             throw new StorageException("Storage over flaw");
         }
-        int searchKey = getSearchKey(r.getUuid());
-        if (searchKey >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        }
-        insertIndex(searchKey, r);
+        insertElement((int)index, r);
         size++;
     }
 
-    public Resume get(String uuid) {
-        int searchKey = getSearchKey(uuid);
-        if (searchKey < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[searchKey];
+@Override
+    public Resume getElement(Object index) {
+        return storage[(int) index];
     }
 
-    public void update(Resume resume) {
-        int searchKey = getSearchKey(resume.getUuid());
-        if (searchKey < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
-        storage[searchKey] = resume;
+@Override
+    public void updateElement(Object index, Resume resume) {
+        storage[(int)index] = resume;
     }
 
-    public void delete(String uuid) {
-        int searchKey = getSearchKey(uuid);
-        if (searchKey < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        deleteIndex(searchKey);
+@Override
+    public void deleteElement(Object index) {
+        deleteElement((int)index);
         storage[size - 1] = null;
         size--;
     }
@@ -63,7 +49,11 @@ public abstract class AbstractArrayStorage implements Storage{
         return size;
     }
 
-    protected abstract int getSearchKey(String uuid);
-    protected abstract void insertIndex(int index, Resume resume);
-    protected abstract void deleteIndex(int index);
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
+    }
+
+    protected abstract void insertElement(int index, Resume resume);
+    protected abstract void deleteElement(int index);
 }
