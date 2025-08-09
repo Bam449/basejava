@@ -6,54 +6,63 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage <T> implements Storage {
 
-    protected abstract boolean isExist(Object searchKey);
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract boolean isExist(T searchKey);
 
-    protected abstract void insertElement(Object index, Resume resume);
+    protected abstract T getSearchKey(String uuid);
 
-    protected abstract void deleteElement(Object index);
+    protected abstract void insertElement(T index, Resume resume);
 
-    protected abstract Resume getElement(Object searchKey);
+    protected abstract void deleteElement(T index);
 
-    protected abstract void updateElement(Object searchKey, Resume resume);
+    protected abstract Resume getElement(T searchKey);
+
+    protected abstract void updateElement(T searchKey, Resume resume);
 
     protected abstract List<Resume> getList();
 
     public void save(Resume r) {
-        Object searchKey = getNotExistedSearchKey(r.getUuid());
+        LOG.info("Save " + r);
+        T searchKey = getNotExistedSearchKey(r.getUuid());
         insertElement(searchKey, r);
     }
 
     public Resume get(String uuid) {
-        Object searchKey = getExistedSearchKey(uuid);
+        LOG.info("Get " + uuid);
+        T searchKey = getExistedSearchKey(uuid);
         return getElement(searchKey);
     }
 
     public void update(Resume resume) {
-        Object searchKey = getExistedSearchKey(resume.getUuid());
+        LOG.info("Update " + resume);
+        T searchKey = getExistedSearchKey(resume.getUuid());
         updateElement(searchKey, resume);
     }
 
     public void delete(String uuid) {
-        Object searchKey = getExistedSearchKey(uuid);
+        LOG.info("Delete " + uuid);
+        T searchKey = getExistedSearchKey(uuid);
         deleteElement(searchKey);
     }
 
-    private Object getExistedSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private T getExistedSearchKey(String uuid) {
+        T searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
+            LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    private Object getNotExistedSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private T getNotExistedSearchKey(String uuid) {
+        T searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
+            LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return searchKey;

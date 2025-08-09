@@ -6,33 +6,33 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage{
+public abstract class AbstractArrayStorage extends AbstractStorage <Integer>{
     private static final int STORAGE_SIZE = 10000;
     protected final Resume[] storage = new Resume[STORAGE_SIZE];
     protected int size;
 
     @Override
-    public void insertElement(Object index, Resume r) {
+    public void insertElement(Integer index, Resume r) {
         if (size == STORAGE_SIZE) {
             throw new StorageException("Storage over flaw");
         }
-        insertElement((int)index, r);
+        insertIndexElement(index, r);
         size++;
     }
 
 @Override
-    public Resume getElement(Object index) {
-        return storage[(int) index];
+    public Resume getElement(Integer index) {
+        return storage[index];
     }
 
 @Override
-    public void updateElement(Object index, Resume resume) {
-        storage[(int)index] = resume;
+    public void updateElement(Integer index, Resume resume) {
+        storage[index] = resume;
     }
 
 @Override
-    public void deleteElement(Object index) {
-        deleteElement((int)index);
+    public void deleteElement(Integer index) {
+        deleteIndexElement(index);
         storage[size - 1] = null;
         size--;
     }
@@ -52,10 +52,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage{
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
-    protected abstract void insertElement(int index, Resume resume);
-    protected abstract void deleteElement(int index);
+    protected abstract void insertIndexElement(Integer index, Resume resume);
+    protected abstract void deleteIndexElement(Integer index);
 }
