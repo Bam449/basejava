@@ -2,29 +2,26 @@
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    private final Resume[] storage = new Resume[10000];
 
-    void clear() {
+    public void clear() {
     }
 
-    void save(Resume r) {
+    public void save(Resume r) {
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return new Resume[0];
     }
 
-    int size() {
+    public int size() {
         return 0;
     }
 }
