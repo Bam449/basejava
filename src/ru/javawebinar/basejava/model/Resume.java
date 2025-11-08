@@ -1,3 +1,4 @@
+package ru.javawebinar.basejava.model;
 
 public class Resume {
     private String uuid;
