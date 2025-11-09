@@ -31,6 +31,14 @@ public class Resume {
         return sections.get(type);
     }
 
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
+    }
+
+    public void addSection(SectionType type, Section section) {
+        sections.put(type, section);
+    }
+
     public String getUuid() {
         return uuid;
     }
@@ -41,7 +49,7 @@ public class Resume {
 
     @Override
     public String toString() {
-        return uuid;
+        return uuid + '(' + fullName + ')';
     }
 
     public String getFullName() {
