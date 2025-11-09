@@ -7,37 +7,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapUuidStorage extends AbstractStorage{
+public class MapUuidStorage extends AbstractStorage <String>{
     Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected Resume doGet(Object uuid) {
-        return storage.get((String) uuid);
+    protected Resume doGet(String uuid) {
+        return storage.get(uuid);
     }
 
     @Override
-    protected boolean isExist(Object key) {
-        return storage.containsKey((String) key);
+    protected boolean isExist(String uuid) {
+        return storage.containsKey(uuid);
     }
 
     @Override
-    protected void saveKey(Resume resume, Object key) {
-        storage.putIfAbsent((String) key, resume);
+    protected void saveKey(Resume resume, String uuid) {
+        storage.putIfAbsent(uuid, resume);
     }
 
     @Override
-    protected Object getSearchKey(String key) {
-        return key;
+    protected String getSearchKey(String uuid) {
+        return uuid;
     }
 
     @Override
-    protected void updateKey(Resume resume, Object key) {
-        storage.put((String) key, resume);
+    protected void updateKey(Resume resume, String uuid) {
+        storage.put(uuid, resume);
     }
 
     @Override
-    protected void deleteKey(Object key) {
-        storage.remove((String) key);
+    protected void deleteKey(String uuid) {
+        storage.remove(uuid);
     }
 
     @Override

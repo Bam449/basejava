@@ -6,7 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
     private static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
@@ -16,37 +16,37 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void deleteElement(int key);
 
     @Override
-    protected boolean isExist(Object index) {
-        return (int)index > -1;
+    protected boolean isExist(Integer index) {
+        return index > -1;
     }
 
     @Override
-    protected Resume doGet(Object key) {
-        return storage[(int)key];
+    protected Resume doGet(Integer index) {
+        return storage[index];
     }
 
     @Override
-    public void saveKey(Resume resume, Object key) {
+    public void saveKey(Resume resume, Integer index) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("STORAGE OVER FLAW", resume.getUuid());
         }
-        insertElement(resume, (int)key);
+        insertElement(resume, index);
         size++;
     }
 
     @Override
-    public Object getSearchKey(String key) {
+    public Integer getSearchKey(String key) {
         return getIndex(key);
     }
 
     @Override
-    public void updateKey(Resume resume, Object key) {
-        storage[(int)key] = resume;
+    public void updateKey(Resume resume, Integer index) {
+        storage[index] = resume;
     }
 
     @Override
-    public void deleteKey(Object key) {
-        deleteElement((int)key);
+    public void deleteKey(Integer index) {
+        deleteElement(index);
         storage[size - 1] = null;
         size--;
     }
