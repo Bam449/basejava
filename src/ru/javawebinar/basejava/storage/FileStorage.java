@@ -66,13 +66,13 @@ public class FileStorage extends AbstractStorage <File>{
     @Override
     protected List<Resume> getList() {
         List<Resume> list = new ArrayList<>();
-        listFiles(file -> list.add(doGet(file)));
+        filesList(file -> list.add(doGet(file)));
         return list;
     }
 
     @Override
     public void clear() {
-        listFiles(this::deleteKey);
+        filesList(this::deleteKey);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class FileStorage extends AbstractStorage <File>{
         return Objects.requireNonNull(directory.listFiles()).length;
     }
 
-    private void listFiles(Consumer <File> t) {
+    private void filesList(Consumer <File> t) {
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             t.accept(file);
         }
