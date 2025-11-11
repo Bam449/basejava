@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import static org.junit.Assert.fail;
+import static ru.javawebinar.basejava.TestData.R4;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
@@ -17,11 +18,11 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         storage.clear();
         try {
             for (int i = 0; i < 10000; i++) {
-                storage.save(new Resume(uuid4));
+                storage.save(new Resume("uuid4"));
             }
         } catch (Exception e) {
             fail(e.getMessage());
         }
-        storage.save(resume4);
+        storage.save(R4);
     }
 }

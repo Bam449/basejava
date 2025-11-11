@@ -1,16 +1,19 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Resume {
+public class Resume implements Serializable {
     private String uuid;
     private String fullName;
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+
+
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -75,5 +78,13 @@ public class Resume {
         result = 31 * result + contacts.hashCode();
         result = 31 * result + sections.hashCode();
         return result;
+    }
+
+    public void setContact(ContactType contactType, String type) {
+        contacts.put(contactType, type);
+    }
+
+    public void setSection(SectionType sectionType, Section section) {
+        sections.put(sectionType, section);
     }
 }

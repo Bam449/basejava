@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Objects;
 
 import static ru.javawebinar.basejava.util.DateUtil.*;
 
-public class Organization {
+public class Organization implements Serializable {
     private final Link homePage;
     private List<Position> positions = new ArrayList<>();
 
@@ -24,16 +25,17 @@ public class Organization {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Organization that = (Organization) o;
-        return Objects.equals(homePage, that.homePage) &&
-                Objects.equals(positions, that.positions);
+        return Objects.equals(homePage, that.homePage) && Objects.equals(positions, that.positions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(homePage, positions);
+        int result = Objects.hashCode(homePage);
+        result = 31 * result + Objects.hashCode(positions);
+        return result;
     }
 
     @Override
@@ -41,7 +43,8 @@ public class Organization {
         return "Organization(" + homePage + "," + positions + ')';
     }
 
-    public static class Position {
+
+    public static class Position implements Serializable {
         private final LocalDate startDate;
         private final LocalDate endDate;
         private final String title;
@@ -83,18 +86,19 @@ public class Organization {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
+
             Position position = (Position) o;
-            return Objects.equals(startDate, position.startDate) &&
-                    Objects.equals(endDate, position.endDate) &&
-                    Objects.equals(title, position.title) &&
-                    Objects.equals(description, position.description);
+            return startDate.equals(position.startDate) && endDate.equals(position.endDate) && title.equals(position.title) && Objects.equals(description, position.description);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(startDate, endDate, title, description);
+            int result = startDate.hashCode();
+            result = 31 * result + endDate.hashCode();
+            result = 31 * result + title.hashCode();
+            result = 31 * result + Objects.hashCode(description);
+            return result;
         }
 
         @Override

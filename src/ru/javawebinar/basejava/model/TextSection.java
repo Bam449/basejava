@@ -21,13 +21,10 @@ public class TextSection extends Section {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         TextSection that = (TextSection) o;
-
         return content.equals(that.content);
-
     }
 
     @Override
