@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class FileStorage extends AbstractStorage <File>{
+public class FileStorage extends AbstractStorage<File> {
     private final File directory;
     private final Serializer serializer;
 
@@ -80,7 +80,7 @@ public class FileStorage extends AbstractStorage <File>{
         return Objects.requireNonNull(directory.listFiles()).length;
     }
 
-    private void filesList(Consumer <File> t) {
+    private void filesList(Consumer<File> t) {
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             t.accept(file);
         }

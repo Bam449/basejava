@@ -1,16 +1,23 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Link implements Serializable {
-    private final String name;
-    private final String url;
+    private String name;
+    private String url;
+
+    public Link() {
+    }
 
     public Link(String name, String url) {
         Objects.requireNonNull(name, "name must not be null");
         this.name = name;
-        this.url = url;
+        this.url = url == null ? "" : url;
     }
 
     public String getName() {

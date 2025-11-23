@@ -7,7 +7,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface Serializer {
-    Resume doRead(InputStream is) throws IOException, ClassNotFoundException;
 
     void doWrite(Resume resume, OutputStream os) throws IOException;
+
+    Resume doRead(InputStream is) throws IOException, ClassNotFoundException;
 }

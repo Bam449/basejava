@@ -13,6 +13,7 @@ import static ru.javawebinar.basejava.TestData.R1;
 import static ru.javawebinar.basejava.TestData.R2;
 import static ru.javawebinar.basejava.TestData.R3;
 import static ru.javawebinar.basejava.TestData.R4;
+import static ru.javawebinar.basejava.TestData.UUID_1;
 import static ru.javawebinar.basejava.TestData.UUID_2;
 import static ru.javawebinar.basejava.TestData.UUID_3;
 import static ru.javawebinar.basejava.TestData.UUID_4;
@@ -46,7 +47,7 @@ public abstract class AbstractStorageTest {
 
     @org.junit.Test
     public void get() {
-        assertEquals(R3, storage.get(UUID_3));
+        assertEquals(R1, storage.get(UUID_1));
     }
 
     @org.junit.Test(expected = NotExistStorageException.class)

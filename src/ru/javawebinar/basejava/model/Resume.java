@@ -1,19 +1,30 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+@XmlRootElement(name = "resume")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Serializable {
     private String uuid;
     private String fullName;
 
+    @XmlElementWrapper(name = "addresses")
+    @XmlElement(name = "address")
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
-
+    public Resume() {
+    }
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -50,17 +61,25 @@ public class Resume implements Serializable {
         this.uuid = uuid;
     }
 
-    @Override
-    public String toString() {
-        return uuid + '(' + fullName + ')';
-    }
-
     public String getFullName() {
         return fullName;
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
+    @Override
+    public String toString() {
+        return uuid + '(' + fullName + ')';
     }
 
     @Override

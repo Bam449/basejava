@@ -6,13 +6,15 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     private static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
     protected abstract int getIndex(String uuid);
+
     protected abstract void insertElement(Resume resume, int key);
+
     protected abstract void deleteElement(int key);
 
     @Override

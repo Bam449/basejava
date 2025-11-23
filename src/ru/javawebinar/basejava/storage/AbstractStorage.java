@@ -7,7 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class AbstractStorage <T> implements Storage {
+public abstract class AbstractStorage<T> implements Storage {
 
     protected abstract Resume doGet(T key);
 
@@ -47,7 +47,7 @@ public abstract class AbstractStorage <T> implements Storage {
         deleteKey(key);
     }
 
-    private T getNotExistedKey (String uuid) {
+    private T getNotExistedKey(String uuid) {
         T key = getSearchKey(uuid);
         if (isExist(key)) {
             throw new ExistStorageException(uuid);
@@ -55,7 +55,7 @@ public abstract class AbstractStorage <T> implements Storage {
         return key;
     }
 
-    private T getExistedKey (String uuid) {
+    private T getExistedKey(String uuid) {
         T key = getSearchKey(uuid);
         if (!isExist(key)) {
             throw new NotExistStorageException(uuid);

@@ -8,18 +8,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-public class ObjectSerializer implements Serializer{
+public class ObjectSerializer implements Serializer {
 
     @Override
     public Resume doRead(InputStream is) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream ois = new ObjectInputStream(is)){
+        try (ObjectInputStream ois = new ObjectInputStream(is)) {
             return (Resume) ois.readObject();
         }
     }
 
     @Override
     public void doWrite(Resume resume, OutputStream os) throws IOException {
-        try (ObjectOutputStream ous = new ObjectOutputStream(os)){
+        try (ObjectOutputStream ous = new ObjectOutputStream(os)) {
             ous.writeObject(resume);
         }
     }
