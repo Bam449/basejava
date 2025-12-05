@@ -17,7 +17,7 @@ public class PathStorage extends AbstractStorage<Path> {
     private final Serializer serializer;
 
     public PathStorage(Path storage, Serializer serializer) {
-        if (!Files.isDirectory(storage)) throw new StorageException(storage + "is not directory", null);
+        if (!Files.isDirectory(storage)) throw new StorageException(storage + "is not directory");
         this.serializer = serializer;
         this.storage = storage;
     }

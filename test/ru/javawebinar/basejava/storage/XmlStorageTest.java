@@ -1,13 +1,12 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.config.Config;
 import ru.javawebinar.basejava.storage.serializer.XmlSerializer;
-
-import java.nio.file.Paths;
 
 
 public class XmlStorageTest extends AbstractStorageTest {
 
     public XmlStorageTest() {
-        super(new PathStorage(Paths.get("storage"), new XmlSerializer()));
+        super(new PathStorage(Config.get().getStorageDir().toPath(), new XmlSerializer()));
     }
 }

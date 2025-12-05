@@ -1,17 +1,11 @@
 package ru.javawebinar.basejava;
 
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.ListSection;
-import ru.javawebinar.basejava.model.Organization;
-import ru.javawebinar.basejava.model.OrganizationSection;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.SectionType;
-import ru.javawebinar.basejava.model.TextSection;
 
-import java.time.Month;
 import java.util.UUID;
 
 public class TestData {
+
     public static final String UUID_1 = UUID.randomUUID().toString();
     public static final String UUID_2 = UUID.randomUUID().toString();
     public static final String UUID_3 = UUID.randomUUID().toString();
@@ -28,7 +22,7 @@ public class TestData {
         R3 = new Resume(UUID_3, "Name3");
         R4 = new Resume(UUID_4, "Name4");
 
-        R1.setContact(ContactType.MAIL, "mail1@ya.ru");
+        /*R1.setContact(ContactType.MAIL, "mail1@ya.ru");
         R1.setContact(ContactType.PHONE, "11111");
 
         R4.setContact(ContactType.PHONE, "44444");
@@ -55,6 +49,6 @@ public class TestData {
                         new Organization("Organization12", "http://Organization12.ru")));
 
         R2.setContact(ContactType.SKYPE, "skype2");
-        R2.setContact(ContactType.PHONE, "22222");
+        R2.setContact(ContactType.PHONE, "22222");*/
     }
 }

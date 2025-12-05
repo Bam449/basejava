@@ -18,7 +18,7 @@ public class FileStorage extends AbstractStorage<File> {
     private final Serializer serializer;
 
     public FileStorage(File directory, Serializer serializer) {
-        if (!directory.isDirectory()) throw new StorageException("is not directory", null);
+        if (!directory.isDirectory()) throw new StorageException("is not directory");
         this.directory = directory;
         this.serializer = serializer;
     }
@@ -59,7 +59,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void deleteKey(File key) {
         if (!key.delete()) {
-            throw new StorageException("file not delete " + key, null);
+            throw new StorageException("file not delete " + key);
         }
     }
 

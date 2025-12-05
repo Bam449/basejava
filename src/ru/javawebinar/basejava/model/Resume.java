@@ -106,4 +106,5 @@ public class Resume implements Serializable {
     public void setSection(SectionType sectionType, Section section) {
         sections.put(sectionType, section);
     }
+
 }
