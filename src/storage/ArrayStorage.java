@@ -1,3 +1,7 @@
+package storage;
+
+import model.Resume;
+
 import java.util.Arrays;
 
 
@@ -6,14 +10,12 @@ public class ArrayStorage {
     private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
-    }
-
     public void save(Resume r) {
-        storage[size] = r;
-        size++;
+        if (STORAGE_LIMIT == size) return;
+        if(getIndex(r.getUuid()) < 0) {
+            storage[size] = r;
+            size++;
+        }
     }
 
     public Resume get(String uuid) {
@@ -22,10 +24,23 @@ public class ArrayStorage {
         return storage[index];
     }
 
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index < 0) return;
+        storage[index] = resume;
+    }
+
     public void delete(String uuid) {
-        storage[getIndex(uuid)] = storage[size-1];
+        int index = getIndex(uuid);
+        if (index < 0) return;
+        storage[index] = storage[size-1];
         storage[size - 1] = null;
         size--;
+    }
+
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
     public Resume[] getAll() {

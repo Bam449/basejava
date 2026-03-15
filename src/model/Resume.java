@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Initial resume class
  */
