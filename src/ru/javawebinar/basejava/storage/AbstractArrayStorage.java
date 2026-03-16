@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -18,32 +21,34 @@ public abstract class AbstractArrayStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        if (STORAGE_LIMIT == size) return;
+        if (STORAGE_LIMIT == size) throw new StorageException("Stack over flaw", resume.getUuid());
         int index = getIndex(resume.getUuid());
         if (index < 0) {
             insertIndex(resume, index);
             size++;
+            return;
         }
+        throw new ExistStorageException(resume.getUuid());
     }
 
     @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index < 0) return null;
+        if (index < 0) throw new NotExistStorageException(uuid);
         return storage[index];
     }
 
     @Override
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (index < 0) return;
+        if (index < 0) throw new NotExistStorageException(resume.getUuid());
         storage[index] = resume;
     }
 
     @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index < 0) return;
+        if (index < 0) throw new NotExistStorageException(uuid);
         removeIndex(index);
         size--;
     }
