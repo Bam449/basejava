@@ -1,62 +1,67 @@
-package storage;
+package ru.javawebinar.basejava.storage;
 
-import model.Resume;
+import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
+public abstract class AbstractArrayStorage implements Storage {
 
-public class ArrayStorage {
     private static final int STORAGE_LIMIT = 10000;
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size = 0;
+    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected int size = 0;
 
-    public void save(Resume r) {
+    protected abstract int getIndex(String uuid);
+
+    protected abstract void insertIndex(Resume resume, int index);
+
+    protected abstract void removeIndex(int index);
+
+    @Override
+    public void save(Resume resume) {
         if (STORAGE_LIMIT == size) return;
-        if(getIndex(r.getUuid()) < 0) {
-            storage[size] = r;
+        int index = getIndex(resume.getUuid());
+        if (index < 0) {
+            insertIndex(resume, index);
             size++;
         }
     }
 
+    @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) return null;
         return storage[index];
     }
 
+    @Override
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index < 0) return;
         storage[index] = resume;
     }
 
+    @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) return;
-        storage[index] = storage[size-1];
-        storage[size - 1] = null;
+        removeIndex(index);
         size--;
     }
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
+    @Override
     public int size() {
         return size;
     }
 
-    private int getIndex(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
-    }
 }
