@@ -6,8 +6,10 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class AbstractStorage<T> implements Storage {
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     protected abstract T getIndex(String uuid);
 
@@ -25,38 +27,53 @@ public abstract class AbstractStorage<T> implements Storage {
 
     @Override
     public void save(Resume resume) {
-        T index = getIndex(resume.getUuid());
-        if (isExist(index)) {
-            throw new ExistStorageException(resume.getUuid());
-        }
+        LOG.info("Save " + resume);
+        T index = getNotExistedKey(resume.getUuid());
         insertElement(resume, index);
     }
 
     @Override
     public Resume get(String uuid) {
-        T index = getIndex(uuid);
-        if (!isExist(index)) throw new NotExistStorageException(uuid);
+        LOG.info("Get " + uuid);
+        T index = getExistedKey(uuid);
         return getElement(index);
     }
 
     @Override
     public void update(Resume resume) {
-        T index = getIndex(resume.getUuid());
-        if (!isExist(index)) throw new NotExistStorageException(resume.getUuid());
+        LOG.info("Update " + resume);
+        T index = getExistedKey(resume.getUuid());
         updateElement(resume, index);
     }
 
     @Override
     public void delete(String uuid) {
-        T index = getIndex(uuid);
-        if (!isExist(index)) throw new NotExistStorageException(uuid);
+        LOG.info("Delete " + uuid);
+        T index = getExistedKey(uuid);
         deleteElement(index);
     }
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("GetAllSorted");
         List<Resume> list = getList();
         Collections.sort(list);
         return list;
+    }
+
+    private T getNotExistedKey(String uuid) {
+        T key = getIndex(uuid);
+        if (isExist(key)) {
+            throw new ExistStorageException(uuid);
+        }
+        return key;
+    }
+
+    private T getExistedKey(String uuid) {
+        T key = getIndex(uuid);
+        if (!isExist(key)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return key;
     }
 }
