@@ -23,10 +23,15 @@ public abstract class AbstractStorageTest {
     private final String uuid3 = "uuid3";
     private final String uuid4 = "uuid4";
 
-    private final Resume resume1 = new Resume(uuid1);
-    private final Resume resume2 = new Resume(uuid2);
-    private final Resume resume3 = new Resume(uuid3);
-    private final Resume resume4 = new Resume(uuid4);
+    private final String fullName1 = "fullName1";
+    private final String fullName2 = "fullName2";
+    private final String fullName3 = "fullName3";
+    private final String fullName4 = "fullName4";
+
+    private final Resume resume1 = new Resume(uuid1, fullName1);
+    private final Resume resume2 = new Resume(uuid2, fullName2);
+    private final Resume resume3 = new Resume(uuid3, fullName3);
+    private final Resume resume4 = new Resume(uuid4, fullName4);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -63,7 +68,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume testResume = new Resume(uuid3);
+        Resume testResume = new Resume(uuid3, fullName4);
         storage.update(testResume);
         assertEquals(testResume, storage.get(uuid3));
     }

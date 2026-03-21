@@ -20,12 +20,12 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
         assertThrows(StorageException.class, () -> {
                     try {
                         for (int i = 0; i < 10000; i++) {
-                            storage.save(new Resume());
+                            storage.save(new Resume("test"));
                         }
                     } catch (Exception e) {
                         fail(e.getMessage());
                     }
-                    storage.save(new Resume());
+                    storage.save(new Resume("test"));
                 }
         );
     }

@@ -1,18 +1,19 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class Resume implements Comparable <Resume> {
 
     private String uuid;
+    private String fullName;
 
-    public Resume() {
-        this(UUID.randomUUID().toString());
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
     }
 
-    public Resume(String uuid) {
+    public Resume(String uuid, String fullName) {
         this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public String getUuid() {
@@ -23,14 +24,23 @@ public class Resume implements Comparable <Resume> {
         this.uuid = uuid;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     @Override
     public String toString() {
-        return uuid;
+        return uuid + " " + fullName;
     }
 
     @Override
     public int compareTo(Resume resume) {
-        return uuid.compareTo(resume.getUuid());
+        int i = fullName.compareTo(resume.getFullName());
+        return i == 0? i: uuid.compareTo(resume.getUuid());
     }
 
     @Override
@@ -38,11 +48,13 @@ public class Resume implements Comparable <Resume> {
         if (o == null || getClass() != o.getClass()) return false;
 
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid);
+        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(uuid);
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 }
