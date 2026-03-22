@@ -41,10 +41,6 @@ public class Organization {
         return "Organization(" + homePage + "," + positions + ')';
     }
 
-    /**
-     * gkislin
-     * 28.07.2016
-     */
     public static class Position {
         private final LocalDate startDate;
         private final LocalDate endDate;
