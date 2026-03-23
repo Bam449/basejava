@@ -68,4 +68,12 @@ public class Resume implements Comparable <Resume>, Serializable {
         result = 31 * result + Objects.hashCode(sections);
         return result;
     }
+
+    public void setContact(ContactType contactType, String type) {
+        contacts.put(contactType, type);
+    }
+
+    public void setSection(SectionType sectionType, Section section) {
+        sections.put(sectionType, section);
+    }
 }
