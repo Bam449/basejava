@@ -4,7 +4,12 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.serializer.StreamSerializer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,8 +45,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected void insertElement(Resume resume, File file) {
-        try {
-            serializer.doWrite(resume, new FileOutputStream(file));
+        try (OutputStream ou = new FileOutputStream(file)){
+            serializer.doWrite(resume, ou);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,8 +54,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume getElement(File file) {
-        try {
-            return serializer.doRead(new FileInputStream(file));
+        try (InputStream is = new FileInputStream(file)){
+            return serializer.doRead(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

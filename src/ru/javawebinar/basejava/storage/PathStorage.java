@@ -4,6 +4,8 @@ import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.serializer.StreamSerializer;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +22,6 @@ public class PathStorage extends AbstractStorage<Path> {
 
     public PathStorage(StreamSerializer serializer, String dir) {
         Objects.requireNonNull(dir, "directory must not be null");
-
         this.serializer = serializer;
         this.directory = Paths.get(dir);
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -40,8 +41,8 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected void insertElement(Resume resume, Path path) {
-        try {
-            serializer.doWrite(resume, Files.newOutputStream(path));
+        try (OutputStream ou = Files.newOutputStream(path)) {
+            serializer.doWrite(resume, ou);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,8 +50,8 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Resume getElement(Path path) {
-        try {
-            return serializer.doRead(Files.newInputStream(path));
+        try (InputStream is = Files.newInputStream(path)){
+            return serializer.doRead(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

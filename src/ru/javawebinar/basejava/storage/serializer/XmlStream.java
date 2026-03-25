@@ -11,14 +11,11 @@ import java.io.OutputStream;
 
 public class XmlStream implements StreamSerializer {
 
-    private final Marshaller marshaller;
-    private final Unmarshaller unmarshaller;
+    private final JAXBContext context;
 
     public XmlStream() {
         try {
-            JAXBContext context = JAXBContext.newInstance(Resume.class);
-            marshaller = context.createMarshaller();
-            unmarshaller = context.createUnmarshaller();
+            context = JAXBContext.newInstance(Resume.class);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -27,6 +24,7 @@ public class XmlStream implements StreamSerializer {
     @Override
     public Resume doRead(InputStream inputStream) {
         try {
+            Unmarshaller unmarshaller = context.createUnmarshaller();
             return (Resume) unmarshaller.unmarshal(inputStream);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
@@ -36,6 +34,7 @@ public class XmlStream implements StreamSerializer {
     @Override
     public void doWrite(Resume resume, OutputStream outputStream) {
         try {
+            Marshaller marshaller = context.createMarshaller();
             marshaller.marshal(resume, outputStream);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
