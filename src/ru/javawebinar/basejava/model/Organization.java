@@ -1,5 +1,10 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import ru.javawebinar.basejava.util.XmlLocalDateAdapter;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
@@ -10,9 +15,13 @@ import java.util.Objects;
 
 import static ru.javawebinar.basejava.util.DateUtil.*;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
-    private final Link homePage;
+    private Link homePage;
     private List<Position> positions = new ArrayList<>();
+
+    public Organization() {
+    }
 
     public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
@@ -42,11 +51,18 @@ public class Organization implements Serializable {
         return "Organization(" + homePage + "," + positions + ')';
     }
 
-    public static class Position implements Serializable{
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String title;
-        private final String description;
+    @XmlAccessorType(XmlAccessType.FIELD)
+    public static class Position implements Serializable {
+
+        @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
+        private LocalDate startDate;
+        @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
+        private LocalDate endDate;
+        private String title;
+        private String description;
+
+        public Position() {
+        }
 
         public Position(int startYear, Month startMonth, String title, String description) {
             this(of(startYear, startMonth), NOW, title, description);
@@ -64,22 +80,6 @@ public class Organization implements Serializable {
             this.endDate = endDate;
             this.title = title;
             this.description = description;
-        }
-
-        public LocalDate getStartDate() {
-            return startDate;
-        }
-
-        public LocalDate getEndDate() {
-            return endDate;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getDescription() {
-            return description;
         }
 
         @Override

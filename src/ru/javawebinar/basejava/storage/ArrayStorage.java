@@ -3,7 +3,6 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 
-
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
@@ -23,7 +22,7 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void removeIndex(int index) {
-        storage[index] = storage[size-1];
+        storage[index] = storage[size - 1];
         storage[size - 1] = null;
     }
 }

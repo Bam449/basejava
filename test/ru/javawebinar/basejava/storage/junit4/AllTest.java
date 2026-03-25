@@ -9,6 +9,6 @@ import org.junit.runners.Suite;
         ArrayStorageTest.class,
         SortedArrayStorageTest.class,
         ListStorageTest.class
-        })
+})
 public class AllTest {
 }

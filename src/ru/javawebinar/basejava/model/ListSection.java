@@ -6,19 +6,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends Section {
-    private final List<String> items;
+    private List<String> items;
+
+    public ListSection() {
+    }
 
     public ListSection(List<String> items) {
         Objects.requireNonNull(items, "items must not be null");
         this.items = items;
     }
 
-    public ListSection(String ...items) {
+    public ListSection(String... items) {
         this(new ArrayList<>(Arrays.asList(items)));
-    }
-
-    public List<String> getItems() {
-        return items;
     }
 
     @Override
@@ -34,7 +33,6 @@ public class ListSection extends Section {
         ListSection that = (ListSection) o;
 
         return items.equals(that.items);
-
     }
 
     @Override

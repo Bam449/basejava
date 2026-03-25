@@ -1,18 +1,31 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Resume implements Comparable <Resume>, Serializable {
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Resume implements Comparable<Resume>, Serializable {
 
     private String uuid;
     private String fullName;
 
+    @XmlElement(name = "contact")
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    @XmlElement(name = "section")
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+
+    public Resume() {
+    }
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -37,10 +50,6 @@ public class Resume implements Comparable <Resume>, Serializable {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     @Override
     public String toString() {
         return uuid + " " + fullName;
@@ -49,7 +58,7 @@ public class Resume implements Comparable <Resume>, Serializable {
     @Override
     public int compareTo(Resume resume) {
         int i = fullName.compareTo(resume.getFullName());
-        return i == 0? i: uuid.compareTo(resume.getUuid());
+        return i == 0 ? i : uuid.compareTo(resume.getUuid());
     }
 
     @Override

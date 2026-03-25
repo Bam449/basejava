@@ -17,7 +17,7 @@ public class ObjectStream implements StreamSerializer {
 
     @Override
     public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
-        try (ObjectOutputStream ous = new ObjectOutputStream(new BufferedOutputStream(outputStream))){
+        try (ObjectOutputStream ous = new ObjectOutputStream(new BufferedOutputStream(outputStream))) {
             ous.writeObject(resume);
         }
     }

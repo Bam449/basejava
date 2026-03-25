@@ -6,6 +6,7 @@ import ru.javawebinar.basejava.storage.serializer.StreamSerializer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,13 +18,13 @@ public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
 
-    public PathStorage(StreamSerializer serializer, Path directory) {
-        Objects.requireNonNull(directory, "directory must not be null");
+    public PathStorage(StreamSerializer serializer, String dir) {
+        Objects.requireNonNull(dir, "directory must not be null");
 
         this.serializer = serializer;
-        this.directory = directory;
+        this.directory = Paths.get(dir);
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
-            throw new IllegalArgumentException(directory + " is not directory or is not writable");
+            throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
     }
 

@@ -53,7 +53,7 @@ public abstract class AbstractStorageTest {
         assertEquals(resume1, storage.get(uuid1));
     }
 
-    @Test (expected = NotExistStorageException.class)
+    @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
         storage.get("dummy");
     }

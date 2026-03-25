@@ -8,7 +8,7 @@ import ru.javawebinar.basejava.storage.Storage;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
     public AbstractArrayStorageTest(Storage storage) {
         super(storage);

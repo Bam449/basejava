@@ -30,7 +30,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected File getIndex(String uuid) {
-        return new File (directory, uuid);
+        return new File(directory, uuid);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class FileStorage extends AbstractStorage<File> {
     protected List<Resume> getList() {
         List<Resume> list = new ArrayList<>();
         for (File file : getListFiles()) {
-            try (InputStream is = new FileInputStream(file)){
+            try (InputStream is = new FileInputStream(file)) {
                 list.add(serializer.doRead(is));
             } catch (IOException e) {
                 throw new RuntimeException(e);
