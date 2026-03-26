@@ -1,33 +1,29 @@
 package ru.javawebinar.basejava.storage.serializer;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.util.GsonLocalDateAdapter;
+import ru.javawebinar.basejava.util.JsonParser;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.time.LocalDate;
 
 public class GsonStream implements StreamSerializer {
-    private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(LocalDate.class, new GsonLocalDateAdapter())
-            .create();
 
     @Override
-    public Resume doRead(InputStream inputStream) {
-        Reader reader = new InputStreamReader(inputStream);
-        return gson.fromJson(reader, Resume.class);
+    public void doWrite(Resume r, OutputStream os) throws IOException {
+        try (Writer writer = new OutputStreamWriter(os)) {
+            JsonParser.write(r, writer);
+        }
     }
 
     @Override
-    public void doWrite(Resume resume, OutputStream outputStream){
-        Writer writer = new OutputStreamWriter(outputStream);
-        gson.toJson(resume, writer);
+    public Resume doRead(InputStream is) throws IOException {
+        try (Reader reader = new InputStreamReader(is)) {
+            return JsonParser.read(reader, Resume.class);
+        }
     }
 }
