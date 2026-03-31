@@ -31,6 +31,10 @@ public class OrganizationSection extends Section {
 
     }
 
+    public List<Organization> getOrganizations() {
+        return organizations;
+    }
+
     @Override
     public int hashCode() {
         return organizations.hashCode();

@@ -20,6 +20,10 @@ public class ListSection extends Section {
         this(new ArrayList<>(Arrays.asList(items)));
     }
 
+    public List<String> getItems() {
+        return items;
+    }
+
     @Override
     public String toString() {
         return items.toString();

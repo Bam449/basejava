@@ -12,7 +12,8 @@ import org.junit.platform.suite.api.Suite;
         MapResumeStorageTest.class,
         FileStorageTest.class,
         PathStorageTest.class,
-        XmlStorageTest.class
+        XmlStorageTest.class,
+        GsonStorageTest.class
 })
 public class AllTest {
 }

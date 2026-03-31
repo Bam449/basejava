@@ -85,4 +85,12 @@ public class Resume implements Comparable<Resume>, Serializable {
     public void setSection(SectionType sectionType, Section section) {
         sections.put(sectionType, section);
     }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
 }

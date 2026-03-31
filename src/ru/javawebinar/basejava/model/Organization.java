@@ -41,6 +41,14 @@ public class Organization implements Serializable {
                 Objects.equals(positions, that.positions);
     }
 
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(homePage, positions);
@@ -80,6 +88,22 @@ public class Organization implements Serializable {
             this.endDate = endDate;
             this.title = title;
             this.description = description;
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         @Override
