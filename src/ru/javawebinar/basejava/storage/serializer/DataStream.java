@@ -1,18 +1,16 @@
 package ru.javawebinar.basejava.storage.serializer;
 
-import ru.javawebinar.basejava.model.Link;
-import ru.javawebinar.basejava.model.ListSection;
-import ru.javawebinar.basejava.model.OrganizationSection;
-import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.SectionType;
-import ru.javawebinar.basejava.model.TextSection;
+import ru.javawebinar.basejava.model.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class DataStream implements StreamSerializer {
 
@@ -42,20 +40,19 @@ public class DataStream implements StreamSerializer {
                                     writeCollection(((ListSection) entry.getValue()).getItems(), dos, dos::writeUTF);
                                 }
                                 case EXPERIENCE, EDUCATION ->
-                                    writeCollection(((OrganizationSection) entry.getValue()).getOrganizations(), dos, (organization) -> {
-                                                Link link = organization.getHomePage();
-                                                dos.writeUTF(link.getName());
-                                                dos.writeUTF(link.getUrl());
-                                                writeCollection(organization.getPositions(), dos, (position) -> {
-                                                    dos.writeUTF(position.getStartDate().toString());
-                                                    dos.writeUTF(position.getEndDate().toString());
-                                                    dos.writeUTF(position.getTitle());
-                                                    dos.writeUTF(position.getDescription());
-                                                });
-                                            }
-                                    );
+                                        writeCollection(((OrganizationSection) entry.getValue()).getOrganizations(), dos, (organization) -> {
+                                                    Link link = organization.getHomePage();
+                                                    dos.writeUTF(link.getName());
+                                                    dos.writeUTF(link.getUrl());
+                                                    writeCollection(organization.getPositions(), dos, (position) -> {
+                                                        dos.writeUTF(position.getStartDate().toString());
+                                                        dos.writeUTF(position.getEndDate().toString());
+                                                        dos.writeUTF(position.getTitle());
+                                                        dos.writeUTF(position.getDescription());
+                                                    });
+                                                }
+                                        );
                             }
-
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -70,7 +67,29 @@ public class DataStream implements StreamSerializer {
     public Resume doRead(InputStream inputStream) throws IOException {
         try (DataInputStream dis = new DataInputStream(inputStream)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            resume.setContact();
+            readList(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readList(dis, () -> {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                switch (sectionType) {
+                    case PERSONAL, OBJECTIVE -> resume.setSection(sectionType, new TextSection(dis.readUTF()));
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        List<String> list = new ArrayList<>();
+                        readList(dis, () -> list.add(dis.readUTF()));
+                        resume.setSection(sectionType, new ListSection(list));
+                    }
+                    case EXPERIENCE, EDUCATION -> {
+                        List<Organization> organizationList = new ArrayList<>();
+                        readList(dis, () -> {
+                            Link link = new Link(dis.readUTF(), dis.readUTF());
+                            List<Organization.Position> positions = new ArrayList<>();
+                            readList(dis, () -> positions.add(
+                                    new Organization.Position(LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF())));
+                            organizationList.add(new Organization(link, positions));
+                        });
+                        resume.setSection(sectionType, new OrganizationSection(organizationList));
+                    }
+                }
+            });
             return resume;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -84,11 +103,13 @@ public class DataStream implements StreamSerializer {
         }
     }
 
-    private <T> Collection <T> readCollection(DataInputStream dis, MySupplier<T> supplier) throws IOException {
+    private <T> List <T>  readList(DataInputStream dis, MySupplier <T> supplier) throws IOException {
         int size = dis.readInt();
+        List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            supplier.accept();
+            list.add(supplier.accept());
         }
+        return list;
     }
 
     interface MyConsumer<T> {
@@ -96,6 +117,6 @@ public class DataStream implements StreamSerializer {
     }
 
     interface MySupplier<T> {
-        void accept () throws IOException;
+        T accept() throws IOException;
     }
 }

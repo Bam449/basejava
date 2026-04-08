@@ -103,7 +103,7 @@ public class Organization implements Serializable {
         }
 
         public String getDescription() {
-            return description;
+            return description == null?"": description;
         }
 
         @Override
