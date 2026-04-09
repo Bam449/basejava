@@ -1,6 +1,13 @@
 package ru.javawebinar.basejava.storage.serializer;
 
-import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.model.ContactType;
+import ru.javawebinar.basejava.model.Link;
+import ru.javawebinar.basejava.model.ListSection;
+import ru.javawebinar.basejava.model.Organization;
+import ru.javawebinar.basejava.model.OrganizationSection;
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.SectionType;
+import ru.javawebinar.basejava.model.TextSection;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,12 +18,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStream implements StreamSerializer {
 
     @Override
-    public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
+    public void doWrite(Resume resume, OutputStream outputStream) {
         try (DataOutputStream dos = new DataOutputStream(outputStream)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
@@ -34,12 +40,8 @@ public class DataStream implements StreamSerializer {
                             SectionType type = entry.getKey();
                             dos.writeUTF(type.name());
                             switch (type) {
-                                case PERSONAL, OBJECTIVE -> {
-                                    dos.writeUTF(((TextSection) entry.getValue()).getContent());
-                                }
-                                case ACHIEVEMENT, QUALIFICATIONS -> {
-                                    writeCollection(((ListSection) entry.getValue()).getItems(), dos, dos::writeUTF);
-                                }
+                                case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) entry.getValue()).getContent());
+                                case ACHIEVEMENT, QUALIFICATIONS -> writeCollection(((ListSection) entry.getValue()).getItems(), dos, dos::writeUTF);
                                 case EXPERIENCE, EDUCATION ->
                                         writeCollection(((OrganizationSection) entry.getValue()).getOrganizations(), dos, (organization) -> {
                                                     Link link = organization.getHomePage();
@@ -65,16 +67,35 @@ public class DataStream implements StreamSerializer {
     }
 
     @Override
-    public Resume doRead(InputStream inputStream) throws IOException {
+    public Resume doRead(InputStream inputStream) {
         try (DataInputStream dis = new DataInputStream(inputStream)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            readItems(dis,
-                    () -> {
+            readItems(dis, () -> {
                         resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
                         return null;
                     }
             );
+        readItems(dis, () -> {
+            SectionType type = SectionType.valueOf(dis.readUTF());
+            switch (type) {
+                case PERSONAL, OBJECTIVE -> resume.setSection(type, new TextSection(dis.readUTF()));
 
+                case ACHIEVEMENT, QUALIFICATIONS -> resume.setSection(type, new ListSection(readList(dis, dis::readUTF)));
+
+                case EXPERIENCE, EDUCATION -> resume.setSection(type, new OrganizationSection(
+                        readList(dis, ()-> new Organization(
+                                new Link(dis.readUTF(), dis.readUTF()),
+                                readList(dis, () -> new Organization.Position(
+                                        LocalDate.parse(dis.readUTF()),
+                                        LocalDate.parse(dis.readUTF()),
+                                        dis.readUTF(), dis.readUTF()
+                                ))
+                        ))
+                ));
+
+            }
+            return null;
+        });
 
             return resume;
         } catch (IOException e) {
