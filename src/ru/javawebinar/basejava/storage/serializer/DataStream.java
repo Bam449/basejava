@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class DataStream implements StreamSerializer {
 
@@ -67,29 +68,14 @@ public class DataStream implements StreamSerializer {
     public Resume doRead(InputStream inputStream) throws IOException {
         try (DataInputStream dis = new DataInputStream(inputStream)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            readList(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
-            readList(dis, () -> {
-                SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                switch (sectionType) {
-                    case PERSONAL, OBJECTIVE -> resume.setSection(sectionType, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> list = new ArrayList<>();
-                        readList(dis, () -> list.add(dis.readUTF()));
-                        resume.setSection(sectionType, new ListSection(list));
+            readItems(dis,
+                    () -> {
+                        resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+                        return null;
                     }
-                    case EXPERIENCE, EDUCATION -> {
-                        List<Organization> organizationList = new ArrayList<>();
-                        readList(dis, () -> {
-                            Link link = new Link(dis.readUTF(), dis.readUTF());
-                            List<Organization.Position> positions = new ArrayList<>();
-                            readList(dis, () -> positions.add(
-                                    new Organization.Position(LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF())));
-                            organizationList.add(new Organization(link, positions));
-                        });
-                        resume.setSection(sectionType, new OrganizationSection(organizationList));
-                    }
-                }
-            });
+            );
+
+
             return resume;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -103,13 +89,20 @@ public class DataStream implements StreamSerializer {
         }
     }
 
-    private <T> List <T>  readList(DataInputStream dis, MySupplier <T> supplier) throws IOException {
+    private <T> List<T> readList(DataInputStream dis, MySupplier<T> supplier) throws IOException {
         int size = dis.readInt();
         List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             list.add(supplier.accept());
         }
         return list;
+    }
+
+    private <T> void readItems(DataInputStream dis, MySupplier<T> supplier) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            supplier.accept();
+        }
     }
 
     interface MyConsumer<T> {
